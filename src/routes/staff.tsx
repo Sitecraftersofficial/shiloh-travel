@@ -112,12 +112,20 @@ export default function Staff() {
           </div>
           <div className="flex items-center gap-2">
             {user && (
-              <button
-                onClick={() => supabase?.auth.signOut().then(() => setUser(null))}
-                className="text-xs underline"
-              >
-                Sign out
-              </button>
+              <>
+                <span className="hidden text-xs text-muted-foreground sm:inline">{user.email}</span>
+                <button
+                  onClick={() =>
+                    supabase?.auth.signOut().then(({ error }) => {
+                      if (error) setAuthError(error.message);
+                      else setUser(null);
+                    })
+                  }
+                  className="rounded-full border border-primary/20 bg-white px-3 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                >
+                  Sign out
+                </button>
+              </>
             )}
             <span className="flex items-center gap-2 rounded-full border border-primary/10 bg-white px-3 py-2 text-xs font-semibold text-primary">
               <ShieldCheck className="h-4 w-4 text-success" /> Team workspace

@@ -1,4 +1,5 @@
-import { Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 import { Header, Footer } from "./components/SiteChrome";
 import Home from "./routes/index";
@@ -8,9 +9,23 @@ import Contact from "./routes/contact";
 import Staff from "./routes/staff";
 import NotFound from "./routes/NotFound";
 
+function ScrollToTop() {
+  const { pathname, search, hash } = useLocation();
+
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+  }, [pathname, search, hash]);
+
+  return null;
+}
+
 export default function App() {
   return (
     <>
+      <ScrollToTop />
       <Header />
       <main>
         <Routes>

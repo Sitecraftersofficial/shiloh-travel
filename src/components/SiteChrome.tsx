@@ -1,4 +1,5 @@
-import { ArrowUpRight, Mail, MapPin, Menu, MessageCircle, Phone } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowUpRight, Mail, MapPin, Menu, MessageCircle, Phone, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { SITE, waLink } from "@/lib/site";
 
@@ -11,6 +12,15 @@ const nav = [
 
 export function Header() {
   const location = useLocation();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
     <>
       <div className="bg-primary px-4 py-2 text-center text-[11px] font-semibold uppercase tracking-[.2em] text-primary-foreground">
@@ -36,7 +46,7 @@ export function Header() {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`text-sm font-semibold transition-colors hover:text-primary ${location.pathname === item.to.split("#")[0] ? "text-primary" : "text-muted-foreground"}`}
+                className={`text-sm font-semibold transition-colors hover:text-primary ${location.pathname + location.hash === item.to || (location.pathname === item.to.split("#")[0] && !item.to.includes("#")) ? "text-primary" : "text-muted-foreground"}`}
               >
                 {item.label}
               </Link>
@@ -55,9 +65,44 @@ export function Header() {
             >
               Find a car <ArrowUpRight className="ml-1 inline h-4 w-4" />
             </Link>
-            <Menu className="h-5 w-5 text-primary lg:hidden" />
+            <button
+              type="button"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              onClick={() => setOpen((v) => !v)}
+              className="grid h-10 w-10 place-items-center rounded-full border border-primary/20 lg:hidden"
+            >
+              {open ? <X className="h-5 w-5 text-primary" /> : <Menu className="h-5 w-5 text-primary" />}
+            </button>
           </div>
         </div>
+        {open && (
+          <nav className="border-t border-primary/10 bg-white px-4 py-4 lg:hidden">
+            <div className="flex flex-col">
+              {nav.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  className={`rounded-lg px-3 py-3 text-sm font-semibold transition-colors hover:bg-secondary ${
+                    location.pathname + location.hash === item.to
+                      ? "text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <Link
+                to="/contact"
+                onClick={() => setOpen(false)}
+                className="mt-2 rounded-full border border-primary/20 px-4 py-2 text-center text-sm font-semibold text-primary"
+              >
+                Visit the desk
+              </Link>
+            </div>
+          </nav>
+        )}
       </header>
     </>
   );

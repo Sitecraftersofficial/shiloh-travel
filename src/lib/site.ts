@@ -4,8 +4,8 @@ export const SITE = {
   address: "M. Peace Plaza, KN 84 St, Inyarurembo, Nyarugenge, Kigali, Rwanda",
   office: "M. Peace Plaza, Kigali",
   // Placeholder contact details — replace with the agency's real numbers.
-  whatsapp: "250788000000",
-  phoneDisplay: "+250 788 000 000",
+  whatsapp: "250787945383",
+  phoneDisplay: "+250 787 945 383",
   email: "info@shilohtravel.rw",
   hours: [
     { d: "Mon – Fri", h: "8:00 – 18:00" },

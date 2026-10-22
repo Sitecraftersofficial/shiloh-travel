@@ -15,7 +15,7 @@ import {
   type Vehicle,
 } from "@/lib/store";
 import { SITE, rwf, waLink } from "@/lib/site";
-import { VEHICLE_IMG, CATEGORY_LABEL } from "@/components/vehicle-images";
+import { vehicleImage, CATEGORY_LABEL } from "@/components/vehicle-images";
 import { WhatsAppButton } from "@/components/SiteChrome";
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -54,13 +54,17 @@ export default function CarRental() {
         <div className="absolute right-0 top-0 h-full w-1/2 bg-[radial-gradient(circle_at_center,rgba(232,190,87,.25),transparent_60%)]" />
         <div className="relative max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">
-            Private car hire · Kigali
+            Car rental · Kigali, Rwanda
           </p>
-          <h1 className="mt-4 text-5xl font-semibold leading-[0.92] md:text-8xl">
-            The right car
+          <h1 className="mt-4 text-4xl font-semibold leading-[0.95] md:text-7xl">
+            Rent a car for your dates —
             <br />
-            <span className="text-accent">changes the trip.</span>
+            <span className="text-accent">self-drive or with a driver.</span>
           </h1>
+          <p className="mt-6 max-w-xl text-white/75">
+            Every car below is ours, insured, and available for the dates you choose. Rates are per
+            day in Rwandan francs; reserve now and pay at pickup.
+          </p>
           <p className="mt-6 flex items-center gap-2 text-white/75">
             <MapPin className="h-4 w-4 text-accent" />
             Pickup & return at {SITE.office}
@@ -132,7 +136,7 @@ export default function CarRental() {
 
       <div className="mt-10 flex flex-wrap items-center gap-2">
         <span className="mr-2 text-xs font-bold uppercase tracking-[.2em] text-muted-foreground">
-          Choose your class
+          Choose a class
         </span>
         {(["all", "safari", "suv", "sedan", "van"] as const).map((c) => (
           <button
@@ -159,7 +163,7 @@ export default function CarRental() {
             >
               <div className="relative">
                 <img
-                  src={VEHICLE_IMG[v.category]}
+                  src={vehicleImage(v.id, v.category)}
                   alt={v.name}
                   loading="lazy"
                   width={1024}

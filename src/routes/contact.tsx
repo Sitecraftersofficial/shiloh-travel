@@ -10,17 +10,17 @@ export default function Contact() {
         <div className="mx-auto grid min-h-[500px] max-w-7xl items-end gap-10 px-4 py-20 md:grid-cols-[1.2fr_.8fr] md:py-28">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[.3em] text-accent">
-              Find your way to us
+              Contact & directions
             </p>
-            <h1 className="mt-6 max-w-3xl text-6xl font-semibold leading-[.9] md:text-8xl">
-              Come as you are.
+            <h1 className="mt-6 max-w-3xl text-5xl font-semibold leading-[.95] md:text-7xl">
+              Visit our desk in Kigali.
               <br />
-              <em className="font-normal text-primary">Leave with a plan.</em>
+              <em className="font-normal text-primary">Or just message us.</em>
             </h1>
           </div>
           <p className="max-w-sm border-l border-foreground/20 pl-6 text-lg leading-relaxed text-muted-foreground">
-            Car pickups, returns, tour consultations, and the best local advice all begin at our
-            office in the heart of Kigali.
+            Car pickups, safari planning and travel bookings all happen at our office in M. Peace
+            Plaza. Walk in, call, or send us a WhatsApp message — we answer fast.
           </p>
         </div>
       </section>
@@ -29,7 +29,7 @@ export default function Contact() {
           <p className="text-sm font-semibold uppercase tracking-[.25em] text-accent">
             M. Peace Plaza
           </p>
-          <h2 className="mt-4 text-4xl font-semibold md:text-5xl">The Shiloh desk is here.</h2>
+          <h2 className="mt-4 text-4xl font-semibold md:text-5xl">Where to find us</h2>
           <div className="mt-10 space-y-6 border-t pt-6">
             <Info icon={MapPin} title="Office" text={SITE.address} />
             <Info
@@ -78,7 +78,8 @@ export default function Contact() {
                 Plaza
               </p>
               <p className="mt-5 max-w-xs text-sm leading-relaxed text-primary-foreground/70">
-                KN 84 St, Inyarurembo, Nyarugenge. A practical starting point for every road ahead.
+                KN 84 St, Inyarurembo, Nyarugenge — in the city centre, easy to reach from anywhere
+                in Kigali.
               </p>
             </div>
             <div className="border-t border-primary-foreground/20 pt-4 text-sm text-primary-foreground/70">

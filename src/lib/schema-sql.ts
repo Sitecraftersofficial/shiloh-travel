@@ -94,6 +94,12 @@ insert into public.vehicles (id,name,category,seats,transmission,fuel,self_drive
  ('rav4','Toyota RAV4','suv',5,'Automatic','Petrol',65000,95000,'{"AWD","A/C","Reverse camera"}'),
  ('corolla','Toyota Corolla','sedan',5,'Automatic','Petrol',45000,70000,'{"A/C","Fuel efficient","Bluetooth"}'),
  ('camry','Toyota Camry Executive','sedan',5,'Automatic','Hybrid',70000,100000,'{"Leather seats","Hybrid","Airport-ready"}'),
- ('hiace','Toyota Hiace Executive Van','van',14,'Manual','Diesel',110000,150000,'{"14 seats","Luggage space","Group tours"}')
+ ('hiace','Toyota Hiace Executive Van','van',14,'Manual','Diesel',110000,150000,'{"14 seats","Luggage space","Group tours"}'),
+ ('santafe-rai262p','Hyundai Santa Fe · RAI 262P','suv',7,'Automatic','Petrol',90000,120000,'{"7 seats","AWD","A/C","Bluetooth"}'),
+ ('sorento2015-raj673m','Kia Sorento 2015 · RAJ 673M','suv',7,'Automatic','Diesel',85000,115000,'{"7 seats","A/C","Bluetooth"}'),
+ ('sorento2014-raj736c','Kia Sorento 2014 · RAJ 736C','suv',7,'Automatic','Diesel',80000,110000,'{"7 seats","A/C","Bluetooth"}'),
+ ('sorento2013-rad626d','Kia Sorento 2013 · RAD 626D','suv',7,'Automatic','Diesel',75000,105000,'{"7 seats","A/C"}'),
+ ('niro-rah846n','Kia Niro · RAH 846N','suv',5,'Automatic','Hybrid',70000,100000,'{"Hybrid","Fuel efficient","A/C","Bluetooth"}'),
+ ('byd-sealion','BYD Sealion','suv',5,'Automatic','Electric',95000,130000,'{"Electric","A/C","Bluetooth"}')
 on conflict (id) do nothing;
 `;

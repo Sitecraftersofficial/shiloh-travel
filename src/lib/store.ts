@@ -38,72 +38,76 @@ export interface Booking {
 
 export const HOLD_MS = 3 * 60 * 60 * 1000;
 
+// TEMP: all cars flat-priced — self-drive 60,000 / chauffeur 90,000 RWF per day.
+const TEMP_SELF_DRIVE = 60000;
+const TEMP_CHAUFFEUR = 90000;
+
 export const SEED_VEHICLES: Vehicle[] = [
   {
-    id: "lc-tx",
-    name: "Toyota Land Cruiser TX",
-    category: "safari",
+    id: "santafe-rai262p",
+    name: "Hyundai Santa Fe · RAI 262P",
+    category: "suv",
+    seats: 7,
+    transmission: "Automatic",
+    fuel: "Petrol",
+    self_drive_rate: TEMP_SELF_DRIVE,
+    chauffeur_rate: TEMP_CHAUFFEUR,
+    features: ["7 seats", "AWD", "A/C", "Bluetooth"],
+  },
+  {
+    id: "sorento2015-raj673m",
+    name: "Kia Sorento 2015 · RAJ 673M",
+    category: "suv",
     seats: 7,
     transmission: "Automatic",
     fuel: "Diesel",
-    self_drive_rate: 120000,
-    chauffeur_rate: 160000,
-    features: ["Pop-up roof", "4x4", "Fridge", "Snorkel"],
+    self_drive_rate: TEMP_SELF_DRIVE,
+    chauffeur_rate: TEMP_CHAUFFEUR,
+    features: ["7 seats", "A/C", "Bluetooth"],
   },
   {
-    id: "lc-prado",
-    name: "Toyota Land Cruiser Prado",
-    category: "safari",
-    seats: 5,
+    id: "sorento2014-raj736c",
+    name: "Kia Sorento 2014 · RAJ 736C",
+    category: "suv",
+    seats: 7,
     transmission: "Automatic",
     fuel: "Diesel",
-    self_drive_rate: 100000,
-    chauffeur_rate: 140000,
-    features: ["4x4", "Roof rack", "A/C", "Bluetooth"],
+    self_drive_rate: TEMP_SELF_DRIVE,
+    chauffeur_rate: TEMP_CHAUFFEUR,
+    features: ["7 seats", "A/C", "Bluetooth"],
   },
   {
-    id: "rav4",
-    name: "Toyota RAV4",
+    id: "sorento2013-rad626d",
+    name: "Kia Sorento 2014 · RAD 626D",
+    category: "suv",
+    seats: 7,
+    transmission: "Automatic",
+    fuel: "Diesel",
+    self_drive_rate: TEMP_SELF_DRIVE,
+    chauffeur_rate: TEMP_CHAUFFEUR,
+    features: ["7 seats", "A/C"],
+  },
+  {
+    id: "niro-rah846n",
+    name: "Kia Niro · RAH 846N",
     category: "suv",
     seats: 5,
     transmission: "Automatic",
-    fuel: "Petrol",
-    self_drive_rate: 65000,
-    chauffeur_rate: 95000,
-    features: ["AWD", "A/C", "Reverse camera"],
-  },
-  {
-    id: "corolla",
-    name: "Toyota Corolla",
-    category: "sedan",
-    seats: 5,
-    transmission: "Automatic",
-    fuel: "Petrol",
-    self_drive_rate: 45000,
-    chauffeur_rate: 70000,
-    features: ["A/C", "Fuel efficient", "Bluetooth"],
-  },
-  {
-    id: "camry",
-    name: "Toyota Camry Executive",
-    category: "sedan",
-    seats: 5,
-    transmission: "Automatic",
     fuel: "Hybrid",
-    self_drive_rate: 70000,
-    chauffeur_rate: 100000,
-    features: ["Leather seats", "Hybrid", "Airport-ready"],
+    self_drive_rate: TEMP_SELF_DRIVE,
+    chauffeur_rate: TEMP_CHAUFFEUR,
+    features: ["Hybrid", "Fuel efficient", "A/C", "Bluetooth"],
   },
   {
-    id: "hiace",
-    name: "Toyota Hiace Executive Van",
-    category: "van",
-    seats: 14,
-    transmission: "Manual",
-    fuel: "Diesel",
-    self_drive_rate: 110000,
-    chauffeur_rate: 150000,
-    features: ["14 seats", "Luggage space", "Group tours"],
+    id: "byd-sealion",
+    name: "BYD Sealion",
+    category: "suv",
+    seats: 5,
+    transmission: "Automatic",
+    fuel: "Electric",
+    self_drive_rate: TEMP_SELF_DRIVE,
+    chauffeur_rate: TEMP_CHAUFFEUR,
+    features: ["Electric", "A/C", "Bluetooth"],
   },
 ];
 
@@ -255,11 +259,10 @@ function demoSeed(): Booking[] {
 }
 
 // ---------- data API ----------
+// The fleet is defined locally (photos live in src/assets) — the Supabase
+// vehicles table is ignored so only these cars are shown on the site.
 export async function fetchVehicles(): Promise<Vehicle[]> {
-  if (!supabase) return SEED_VEHICLES;
-  const { data, error } = await supabase.from("vehicles").select("*").order("self_drive_rate");
-  if (error || !data?.length) return SEED_VEHICLES;
-  return data as Vehicle[];
+  return SEED_VEHICLES;
 }
 
 export async function fetchBookings(): Promise<Booking[]> {

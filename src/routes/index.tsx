@@ -89,7 +89,7 @@ export default function Home() {
             </div>
             <div className="animate-rise-in mt-14 flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/70 [animation-delay:480ms]">
               <span className="flex items-center gap-2">
-                <MapPinned className="h-4 w-4 text-accent" /> M. Peace Plaza, Kigali
+                <MapPinned className="h-4 w-4 text-accent" /> YYUSSA City Center, Kigali
               </span>
               <span className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-accent" /> Local, trusted, personal
@@ -178,7 +178,7 @@ export default function Home() {
             </Link>
           </div>
           <p className="mt-3 text-center text-xs text-muted-foreground">
-            Pickup & return at M. Peace Plaza, Kigali · Free 3-hour hold
+            Pickup & return at YYUSSA City Center, Ground Floor F1-22 · Free 3-hour hold
           </p>
         </div>
       </div>
@@ -213,7 +213,7 @@ export default function Home() {
             [
               "03",
               "Collect the keys in Kigali",
-              "Pickup and return at M. Peace Plaza, or ask about delivery.",
+              "Pickup and return at YYUSSA City Center, Ground Floor F1-22, or ask about delivery.",
             ],
           ].map(([n, t, d], i) => (
             <Reveal key={n} delay={i * 120}>
@@ -410,7 +410,7 @@ export default function Home() {
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-linear-to-r from-primary to-[#164fa8] px-5 py-4 text-sm text-white shadow-[0_20px_50px_-30px_rgba(8,34,91,.8)]">
           <span className="flex items-center gap-2 text-white/85">
             <MapPinned className="h-4 w-4 text-accent" />
-            Visit the Shiloh desk at M. Peace Plaza, Kigali.
+            Visit the Shiloh desk at YYUSSA City Center, Ground Floor F1-22.
           </span>
           <Link to="/contact" className="font-bold text-accent hover:underline">
             Get directions <ArrowRight className="ml-1 inline h-4 w-4" />

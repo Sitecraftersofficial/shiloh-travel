@@ -141,7 +141,7 @@ export function Footer() {
         </div>
         <div>
           <p className="mb-4 text-xs font-bold uppercase tracking-[.2em] text-accent">
-            M. Peace Plaza
+            YYUSSA City Center
           </p>
           <div className="space-y-3 text-sm text-primary-foreground/75">
             <p className="flex gap-2">
@@ -218,6 +218,21 @@ export function WhatsAppButton({
       {variant === "quiet" && (
         <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
       )}
+    </a>
+  );
+}
+
+export function FloatingWhatsApp() {
+  return (
+    <a
+      href={waLink("Hello Shiloh Travel, I found you on your website and would like more information.")}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Chat with Shiloh Travel on WhatsApp"
+      title="Chat with us on WhatsApp"
+      className="fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-whatsapp text-white shadow-[0_10px_30px_-8px_rgba(37,211,102,.8)] transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-whatsapp"
+    >
+      <MessageCircle className="h-7 w-7" />
     </a>
   );
 }

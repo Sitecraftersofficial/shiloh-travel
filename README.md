@@ -1,6 +1,6 @@
 # Shiloh Travel
 
-Build the marketing website and car booking management system for Shiloh Travel Agency Ltd, based at M. Peace Plaza (KN 84 St, Inyarurembo, Nyarugenge, Kigali, Rwanda).
+Build the marketing website and car booking management system for Shiloh Travel Agency Ltd, based at YYUSSA City Center, Ground Floor F1-22, Kigali, Rwanda.
 
 Key Requirements:
 
@@ -12,18 +12,18 @@ Key Requirements:
      - Visa applications & entry permits
      - Furnished apartments for rent in Kigali
      - Hotel bookings & group stays
-   - Prominently feature the M. Peace Plaza office address, trust credentials, operating hours, and quick contact details.
+   - Prominently feature the YYUSSA City Center, Ground Floor F1-22 office address, trust credentials, operating hours, and quick contact details.
 
 2. Primary Online Action: Car Rental Engine:
    - Filterable fleet showcase (safari 4x4s like Land Cruiser Prado/TX, RAV4, city sedans, executive vans) with transparent rates and specs.
    - Toggle for "Self-Drive" vs. "With Professional Chauffeur".
-   - Pickup and return location locked to M. Peace Plaza, Kigali.
+   - Pickup and return location locked to YYUSSA City Center, Ground Floor F1-22.
    - Real-time date availability checker to prevent double bookings.
    - On submission, place the selected car on a 3-hour temporary hold (unless manually released or confirmed).
    - Generate a unique booking reference code (e.g. #SH-XXXX) and a one-tap WhatsApp redirect pre-filled with the exact reservation details so the customer can finalize payment directly with staff.
 
 3. Staff Operations Dashboard:
-   - A dedicated internal view for Shiloh staff at M. Peace Plaza to manage fleet and reservations.
+   - A dedicated internal view for Shiloh staff at YYUSSA City Center, Ground Floor F1-22 to manage fleet and reservations.
    - View real-time status of all inquiries and cars (Available, Payment Pending / 3hr Hold, Booked & Paid, Completed, Cancelled).
    - Actions to manually "Mark Booked & Paid", "Release Car", or manually block dates for walk-in/phone clients.
    - Live countdown for active 3-hour holds.

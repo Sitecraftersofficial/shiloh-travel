@@ -106,7 +106,7 @@ export default function Staff() {
             </p>
             <h1 className="mt-2 text-5xl font-semibold text-primary">Good morning, Shiloh team.</h1>
             <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-              <CalendarDays className="h-4 w-4 text-primary" /> Fleet and reservations · M. Peace
+              <CalendarDays className="h-4 w-4 text-primary" /> Fleet and reservations · YYUSSA
               Plaza, Kigali
             </p>
           </div>

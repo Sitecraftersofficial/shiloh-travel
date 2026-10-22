@@ -2,7 +2,7 @@
 
 ## Project overview
 
-Shiloh Travel — marketing site + car rental booking app for Shiloh Travel Agency Ltd (M. Peace Plaza, Kigali, Rwanda).
+Shiloh Travel — marketing site + car rental booking app for Shiloh Travel Agency Ltd (YYUSSA City Center, Ground Floor F1-22, Kigali, Rwanda).
 
 Standard Vite + React 19 + TypeScript SPA. No meta-framework; entry is `index.html` → `src/main.tsx` → `src/App.tsx`. Routing is `react-router-dom`. Styling is Tailwind CSS v4 with shadcn-style components in `src/components/ui`. Data lives in an external Supabase project; credentials come from `.env` (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`), with browser-local mock data as fallback.
 

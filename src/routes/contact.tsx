@@ -19,15 +19,15 @@ export default function Contact() {
             </h1>
           </div>
           <p className="max-w-sm border-l border-foreground/20 pl-6 text-lg leading-relaxed text-muted-foreground">
-            Car pickups, safari planning and travel bookings all happen at our office in M. Peace
-            Plaza. Walk in, call, or send us a WhatsApp message — we answer fast.
+            Car pickups, safari planning and travel bookings all happen at our office in YYUSSA
+            City Center. Walk in, call, or send us a WhatsApp message — we answer fast.
           </p>
         </div>
       </section>
       <section className="mx-auto grid max-w-7xl gap-12 px-4 py-20 lg:grid-cols-[.8fr_1.2fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[.25em] text-accent">
-            M. Peace Plaza
+            YYUSSA City Center
           </p>
           <h2 className="mt-4 text-4xl font-semibold md:text-5xl">Where to find us</h2>
           <div className="mt-10 space-y-6 border-t pt-6">
@@ -52,7 +52,7 @@ export default function Contact() {
             </div>
           </div>
           <div className="mt-10 flex flex-wrap gap-3">
-            <WhatsAppButton message="Hello Shiloh Travel, I would like to visit your office at M. Peace Plaza.">
+            <WhatsAppButton message="Hello Shiloh Travel, I would like to visit your office at YYUSSA City Center, Ground Floor F1-22.">
               Message the desk
             </WhatsAppButton>
             <Link
@@ -73,13 +73,12 @@ export default function Contact() {
             <div>
               <p className="text-sm text-primary-foreground/70">Pickup & return point</p>
               <p className="mt-3 text-4xl font-semibold leading-none">
-                M. Peace
+                YYUSSA City
                 <br />
-                Plaza
+                Center
               </p>
               <p className="mt-5 max-w-xs text-sm leading-relaxed text-primary-foreground/70">
-                KN 84 St, Inyarurembo, Nyarugenge — in the city centre, easy to reach from anywhere
-                in Kigali.
+                Ground Floor F1-22 — easy to reach in Kigali's city centre.
               </p>
             </div>
             <div className="border-t border-primary-foreground/20 pt-4 text-sm text-primary-foreground/70">
@@ -89,10 +88,10 @@ export default function Contact() {
         </div>
       </section>
       <iframe
-        title="Map of M. Peace Plaza, Kigali"
+        title="Map of YYUSSA City Center, Kigali"
         className="h-[420px] w-full border-0 grayscale"
         loading="lazy"
-        src="https://www.google.com/maps?q=M.+Peace+Plaza+Kigali&output=embed"
+        src="https://www.google.com/maps?q=YYUSSA+City+Center+Kigali&output=embed"
       />
     </div>
   );

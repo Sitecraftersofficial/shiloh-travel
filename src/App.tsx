@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Route, Routes, useLocation, useSearchParams } from "react-router-dom";
 
-import { Header, Footer } from "./components/SiteChrome";
+import { FloatingWhatsApp, Header, Footer } from "./components/SiteChrome";
 import Home from "./routes/index";
 import Services from "./routes/services";
 import CarRental from "./routes/car-rental";
@@ -52,6 +52,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <FloatingWhatsApp />
     </>
   );
 }

@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Users, Fuel, Settings2, MapPin, CheckCircle2, X, Timer } from "lucide-react";
 import {
   useBookings,
@@ -40,6 +40,14 @@ export default function CarRental() {
   const [returnTime, setReturnTime] = useState(() => params.get("dropoffTime") ?? "17:00");
   const [selected, setSelected] = useState<Vehicle | null>(null);
   const [confirmed, setConfirmed] = useState<Booking | null>(null);
+
+  useEffect(() => {
+    const vehicleId = new URLSearchParams(location.search).get("reserve");
+    if (vehicleId) {
+      const vehicle = vehicles.find((item) => item.id === vehicleId);
+      if (vehicle) setSelected(vehicle);
+    }
+  }, [vehicles, location.search]);
 
   const validDates = start >= today() && end >= start && (start !== end || returnTime > pickupTime);
   const days = validDates ? rentalDays(start, end) : 0;
@@ -151,7 +159,6 @@ export default function CarRental() {
 
       <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((v) => {
-          const rate = mode === "self" ? v.self_drive_rate : v.chauffeur_rate;
           const clash = validDates
             ? conflicts(bookings, v.id, start, end, pickupTime, returnTime)
             : [];
@@ -162,14 +169,16 @@ export default function CarRental() {
               className="group flex flex-col overflow-hidden rounded-[1.5rem] border bg-white shadow-[0_18px_50px_-35px_rgba(11,54,130,.6)] transition-transform duration-300 hover:-translate-y-2"
             >
               <div className="relative">
-                <img
-                  src={vehicleImage(v.id, v.category)}
-                  alt={v.name}
-                  loading="lazy"
-                  width={1024}
-                  height={704}
-                  className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+                <Link to={`/car-rental?vehicle=${v.id}`} aria-label={`View details for ${v.name}`}>
+                  <img
+                    src={vehicleImage(v.id, v.category)}
+                    alt={v.name}
+                    loading="lazy"
+                    width={1024}
+                    height={704}
+                    className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </Link>
                 <span
                   className={`absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-semibold text-primary-foreground ${free ? "bg-success" : "bg-destructive"}`}
                 >
@@ -180,7 +189,12 @@ export default function CarRental() {
                 <p className="text-xs font-semibold uppercase tracking-widest text-accent">
                   {CATEGORY_LABEL[v.category]}
                 </p>
-                <h3 className="text-xl font-semibold">{v.name}</h3>
+                <Link
+                  to={`/car-rental?vehicle=${v.id}`}
+                  className="text-xl font-semibold hover:text-primary"
+                >
+                  {v.name}
+                </Link>
                 <div className="mt-3 flex gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Users className="h-4 w-4" />
@@ -202,25 +216,13 @@ export default function CarRental() {
                     </span>
                   ))}
                 </div>
-                <div className="mt-auto flex items-end justify-between pt-5">
-                  <div>
-                    <p className="text-lg font-bold">
-                      {rwf(rate)}
-                      <span className="text-sm font-normal text-muted-foreground"> /day</span>
-                    </p>
-                    {validDates && (
-                      <p className="text-xs text-muted-foreground">
-                        {rwf(rate * days)} for {days} days
-                      </p>
-                    )}
-                  </div>
-                  <button
-                    disabled={!free}
-                    onClick={() => setSelected(v)}
-                    className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-40"
+                <div className="mt-auto pt-5">
+                  <Link
+                    to={`/car-rental?vehicle=${v.id}`}
+                    className="block w-full rounded-full bg-primary px-4 py-2 text-center text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5"
                   >
-                    Reserve
-                  </button>
+                    View car details
+                  </Link>
                 </div>
                 {validDates && !free && (
                   <p className="mt-2 text-xs text-destructive">

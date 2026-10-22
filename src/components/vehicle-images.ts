@@ -32,6 +32,10 @@ export const VEHICLE_GALLERY: Record<string, string[]> = {
   "sorento2014-raj736c": [sorento2014, sorento2014b],
   "sorento2015-raj673m": [sorento2015, sorento2015b, sorento2015c],
 };
+
+export function vehicleGallery(id: string, category: Category): string[] {
+  return VEHICLE_GALLERY[id] ?? [vehicleImage(id, category)];
+}
 export const CATEGORY_LABEL: Record<Category, string> = {
   safari: "Safari 4x4",
   suv: "SUV",

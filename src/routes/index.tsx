@@ -18,7 +18,6 @@ import { vehicleImage } from "@/components/vehicle-images";
 import { WhatsAppButton } from "@/components/SiteChrome";
 import { Reveal } from "@/components/Reveal";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
-import { rwf } from "@/lib/site";
 import heroImage from "@/assets/hero.jpg";
 
 const strip = [
@@ -61,7 +60,7 @@ export default function Home() {
         {/* decorative glow blobs */}
         <div className="animate-float-y pointer-events-none absolute -left-32 top-24 -z-10 h-96 w-96 rounded-full bg-accent/15 blur-3xl" />
         <div className="pointer-events-none absolute -right-24 bottom-0 -z-10 h-80 w-80 rounded-full bg-white/10 blur-3xl" />
-        <div className="mx-auto grid min-h-[600px] max-w-7xl items-center gap-12 px-4 py-16 lg:grid-cols-[1.1fr_.9fr]">
+        <div className="mx-auto grid min-h-150 max-w-7xl items-center gap-12 px-4 py-16 lg:grid-cols-[1.1fr_.9fr]">
           <div>
             <div className="animate-rise-in inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[.2em] backdrop-blur">
               <Sparkles className="h-4 w-4 text-accent" /> Travel agency in Kigali, Rwanda
@@ -246,10 +245,10 @@ export default function Home() {
             <Reveal>
               <Link
                 to="/car-rental"
-                className="group relative flex min-h-[460px] flex-col justify-end overflow-hidden rounded-[2rem] bg-[linear-gradient(160deg,#0c3a80_0%,#08224f_100%)] p-8 text-white shadow-[0_40px_90px_-40px_rgba(8,34,91,.8)] transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_50px_110px_-40px_rgba(8,34,91,.9)] md:p-12"
+                className="group relative flex min-h-115 flex-col justify-end overflow-hidden rounded-4xl bg-[linear-gradient(160deg,#0c3a80_0%,#08224f_100%)] p-8 text-white shadow-[0_40px_90px_-40px_rgba(8,34,91,.8)] transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_50px_110px_-40px_rgba(8,34,91,.9)] md:p-12"
               >
                 <div className="absolute -right-16 -top-16 h-72 w-72 rounded-full bg-accent/20 blur-2xl transition-all duration-700 group-hover:scale-150" />
-                <div className="absolute -bottom-10 -right-10 h-64 w-64 rounded-full border-[28px] border-accent/25 transition-transform duration-700 group-hover:rotate-45" />
+                <div className="absolute -bottom-10 -right-10 h-64 w-64 rounded-full border-28 border-accent/25 transition-transform duration-700 group-hover:rotate-45" />
                 <Car className="animate-float-y absolute left-10 top-10 h-12 w-12 text-accent" />
                 <div className="relative">
                   <p className="text-xs font-bold uppercase tracking-[.25em] text-accent">
@@ -268,7 +267,7 @@ export default function Home() {
             <Reveal delay={140}>
               <Link
                 to="/services#tours"
-                className="group relative flex min-h-[460px] flex-col justify-end overflow-hidden rounded-[2rem] bg-[linear-gradient(160deg,#fff_0%,#fdf6e6_100%)] p-8 shadow-[0_40px_90px_-45px_rgba(20,40,80,.45)] ring-1 ring-primary/10 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_50px_110px_-45px_rgba(20,40,80,.55)] md:p-12"
+                className="group relative flex min-h-115 flex-col justify-end overflow-hidden rounded-4xl bg-[linear-gradient(160deg,#fff_0%,#fdf6e6_100%)] p-8 shadow-[0_40px_90px_-45px_rgba(20,40,80,.45)] ring-1 ring-primary/10 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_50px_110px_-45px_rgba(20,40,80,.55)] md:p-12"
               >
                 <div className="absolute right-0 top-0 h-full w-2/3 bg-[radial-gradient(circle_at_center,rgba(214,166,66,.3),transparent_65%)] transition-all duration-700 group-hover:scale-125" />
                 <Mountain className="animate-float-y absolute left-10 top-10 h-12 w-12 text-primary" />
@@ -318,11 +317,8 @@ export default function Home() {
                       src={vehicleImage(v.id, v.category)}
                       alt={v.name}
                       loading="lazy"
-                      className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="aspect-16/10 w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <span className="absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-xs font-bold text-accent-foreground shadow">
-                      {rwf(v.self_drive_rate)} /day
-                    </span>
                   </div>
                   <div className="p-5">
                     <h3 className="text-lg font-semibold text-primary">{v.name}</h3>
@@ -339,10 +335,10 @@ export default function Home() {
                     </div>
                     <div className="mt-4 flex gap-2">
                       <Link
-                        to="/car-rental"
-                        className="flex-1 rounded-full bg-primary px-4 py-2 text-center text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5"
+                        to={`/car-rental?vehicle=${v.id}`}
+                        className="flex flex-1 items-center justify-center rounded-full bg-primary px-4 py-2 text-center text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5"
                       >
-                        Book this car
+                        View car details
                       </Link>
                       <WhatsAppButton
                         message={`Hello Shiloh Travel, I'm interested in the ${v.name}.`}
@@ -390,9 +386,9 @@ export default function Home() {
             {SERVICES.filter((service) => service.id !== "tours").map((service, index) => (
               <Reveal key={service.id} delay={index * 100}>
                 <div className="group relative h-full overflow-hidden rounded-2xl border border-primary/10 bg-white p-5 shadow-[0_20px_50px_-35px_rgba(14,55,130,.5)] transition-all duration-300 hover:-translate-y-1.5 hover:border-accent/40 hover:shadow-[0_25px_60px_-30px_rgba(14,55,130,.55)]">
-                  <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-accent to-primary transition-transform duration-500 group-hover:scale-x-100" />
+                  <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-linear-to-r from-accent to-primary transition-transform duration-500 group-hover:scale-x-100" />
                   <div className="flex items-start justify-between">
-                    <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-secondary to-accent/20 text-xs font-bold text-primary">
+                    <span className="grid h-9 w-9 place-items-center rounded-xl bg-linear-to-br from-secondary to-accent/20 text-xs font-bold text-primary">
                       0{index + 1}
                     </span>
                     <service.icon className="h-6 w-6 text-primary/70 transition-all duration-300 group-hover:scale-110 group-hover:text-accent-foreground" />
@@ -411,7 +407,7 @@ export default function Home() {
         </div>
       </section>
       <section className="mx-auto max-w-7xl px-4 pb-10 pt-4">
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-gradient-to-r from-primary to-[#164fa8] px-5 py-4 text-sm text-white shadow-[0_20px_50px_-30px_rgba(8,34,91,.8)]">
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-linear-to-r from-primary to-[#164fa8] px-5 py-4 text-sm text-white shadow-[0_20px_50px_-30px_rgba(8,34,91,.8)]">
           <span className="flex items-center gap-2 text-white/85">
             <MapPinned className="h-4 w-4 text-accent" />
             Visit the Shiloh desk at M. Peace Plaza, Kigali.

@@ -28,7 +28,7 @@ export default function Services() {
             <h1 className="mt-6 max-w-4xl text-5xl font-semibold leading-[.95] md:text-7xl">
               Tours, cars, flights and visas.
               <br />
-              <em className="font-normal text-accent">One agency, one desk.</em>
+              <em className="font-normal text-accent">Discover the world with us.</em>
             </h1>
           </div>
           <div className="max-w-sm border-l border-primary-foreground/25 pl-6 text-primary-foreground/75">

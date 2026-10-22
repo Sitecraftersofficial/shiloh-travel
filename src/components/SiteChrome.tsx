@@ -24,13 +24,13 @@ export function Header() {
 
   return (
     <>
-      <div className="bg-primary px-4 py-2 text-center text-[11px] font-semibold uppercase tracking-[.2em] text-primary-foreground">
+      <div className="bg-primary px-4 py-2 text-center text-[9px] font-semibold uppercase tracking-[.12em] text-primary-foreground sm:text-[11px] sm:tracking-[.2em]">
         Flights · Safaris · Car rental · Visas — all from one desk in Kigali
       </div>
       <header className="sticky top-0 z-40 border-b border-primary/10 bg-white/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-3">
           <Link to="/" className="flex items-center gap-3">
-            <Logo className="h-11 w-auto rounded-md" />
+            <Logo className="h-16 w-auto rounded-md" />
           </Link>
           <nav className="hidden items-center gap-7 lg:flex">
             {nav.map((item) => (
@@ -52,7 +52,7 @@ export function Header() {
             </Link>
             <Link
               to="/car-rental"
-              className="rounded-full bg-accent px-4 py-2.5 text-sm font-bold text-accent-foreground shadow-[0_8px_20px_-12px_var(--color-accent)]"
+              className="hidden rounded-full bg-accent px-4 py-2.5 text-sm font-bold text-accent-foreground shadow-[0_8px_20px_-12px_var(--color-accent)] sm:inline-flex"
             >
               Find a car <ArrowUpRight className="ml-1 inline h-4 w-4" />
             </Link>
@@ -95,6 +95,13 @@ export function Header() {
               >
                 Visit the desk
               </Link>
+              <Link
+                to="/car-rental"
+                onClick={() => setOpen(false)}
+                className="mt-2 rounded-full bg-accent px-4 py-2.5 text-center text-sm font-bold text-accent-foreground"
+              >
+                Find a car <ArrowUpRight className="ml-1 inline h-4 w-4" />
+              </Link>
             </div>
           </nav>
         )}
@@ -108,7 +115,7 @@ export function Footer() {
     <footer className="mt-20 bg-primary text-primary-foreground">
       <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 md:grid-cols-[1.3fr_.7fr_.7fr]">
         <div>
-          <Logo className="h-14 w-auto rounded-lg bg-white/5 p-1" />
+          <Logo className="h-20 w-auto rounded-lg bg-white/5 p-1" />
           <p className="mt-6 max-w-sm text-sm leading-relaxed text-primary-foreground/70">
             Shiloh Travel Agency Ltd is a full-service travel agency in Kigali. We book flights,
             rent cars, run safaris, handle visas and find you a place to stay — in Rwanda and
@@ -201,11 +208,11 @@ export function WhatsAppButton({
       className={`inline-flex items-center justify-center gap-2 text-sm font-bold transition-all ${styles} ${className}`}
     >
       <span
-        className={`grid h-7 w-7 place-items-center rounded-full ${
+        className={`grid h-10 w-10 place-items-center rounded-full ${
           variant === "quiet" ? "bg-whatsapp/10 text-whatsapp" : "border border-white/50 text-white"
         }`}
       >
-        <MessageCircle className="h-4 w-4" />
+        <MessageCircle className="h-5 w-5" />
       </span>
       <span>{children}</span>
       {variant === "quiet" && (

@@ -226,20 +226,35 @@ export function FloatingWhatsApp() {
   const [open, setOpen] = useState(false);
   return (
     <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2 lg:bottom-8 lg:right-8">
-      {open &&
-        SITE.phones.map((phone) => (
-          <a
-            key={phone.wa}
-            href={`https://wa.me/${phone.wa}?text=${encodeURIComponent(
-              "Hello Shiloh Travel, I found you on your website and would like more information.",
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full bg-white px-4 py-2 text-sm font-bold text-whatsapp shadow-[0_10px_30px_-8px_rgba(37,211,102,.8)] ring-1 ring-whatsapp/30 transition-transform hover:scale-105"
-          >
-            Chat {phone.display}
-          </a>
-        ))}
+      {open && (
+        <div className="rounded-2xl bg-white p-4 text-sm text-primary shadow-[0_10px_30px_-8px_rgba(37,211,102,.8)] ring-1 ring-whatsapp/30">
+          <p className="font-bold text-whatsapp">Chat or call us on:</p>
+          <div className="mt-2 space-y-1.5">
+            {SITE.phones.map((phone) => (
+              <div key={phone.wa} className="flex items-center gap-3">
+                <a
+                  href={`tel:+${phone.wa}`}
+                  aria-label={`Call ${phone.display}`}
+                  className="text-muted-foreground hover:text-whatsapp"
+                >
+                  <Phone className="h-4 w-4" />
+                </a>
+                <a
+                  href={waLink(
+                    "Hello Shiloh Travel, I found you on your website and would like more information.",
+                    phone.wa,
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold hover:text-whatsapp"
+                >
+                  {phone.display}
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

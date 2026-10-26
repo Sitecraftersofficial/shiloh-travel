@@ -70,8 +70,8 @@ export default function Services() {
             <p className="text-sm font-semibold uppercase tracking-[.3em] text-accent">
               What we do
             </p>
-            <h1 className="mt-6 max-w-4xl text-5xl font-semibold leading-[.95] md:text-7xl">
-              Tours, cars, flights and visas.
+            <h1 className="mt-6 max-w-4xl text-balance text-4xl font-medium leading-[1.02] tracking-[-0.025em] md:text-6xl">
+              Tours and safaris, car rental, air ticketing and Visa assistance.
               <br />
               <em className="font-normal text-accent">Discover the world with us.</em>
             </h1>

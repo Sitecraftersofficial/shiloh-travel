@@ -21,8 +21,8 @@ export const VEHICLE_IMAGES: Record<string, string> = {
   "byd-sealion": bydSealion,
 };
 
-export function vehicleImage(id: string, _category: Category): string {
-  return VEHICLE_IMAGES[id] ?? VEHICLE_IMAGES["byd-sealion"];
+export function vehicleImage(id: string, _category: Category, imageUrl?: string | null): string {
+  return imageUrl || VEHICLE_IMAGES[id] || VEHICLE_IMAGES["byd-sealion"];
 }
 
 /** Extras (gallery) — extra angles for the same fleet cars. */
@@ -33,8 +33,8 @@ export const VEHICLE_GALLERY: Record<string, string[]> = {
   "sorento2015-raj673m": [sorento2015, sorento2015b, sorento2015c],
 };
 
-export function vehicleGallery(id: string, category: Category): string[] {
-  return VEHICLE_GALLERY[id] ?? [vehicleImage(id, category)];
+export function vehicleGallery(id: string, category: Category, imageUrl?: string | null): string[] {
+  return imageUrl ? [imageUrl] : (VEHICLE_GALLERY[id] ?? [vehicleImage(id, category)]);
 }
 export const CATEGORY_LABEL: Record<Category, string> = {
   safari: "Safari 4x4",

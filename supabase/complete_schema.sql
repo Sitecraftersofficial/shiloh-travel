@@ -22,8 +22,11 @@ create table if not exists public.vehicles (
   self_drive_rate integer not null check (self_drive_rate >= 0),
   chauffeur_rate integer not null check (chauffeur_rate >= 0),
   features text[] not null default '{}',
+  image_url text,
   active boolean not null default true
 );
+
+alter table public.vehicles add column if not exists image_url text;
 
 create table if not exists public.staff_users (
   user_id uuid primary key references auth.users(id) on delete cascade,
@@ -180,6 +183,7 @@ $$;
 -- the intended policy set.
 drop policy if exists "public read vehicles" on public.vehicles;
 drop policy if exists "public can view active vehicles" on public.vehicles;
+drop policy if exists "staff manage vehicles" on public.vehicles;
 drop policy if exists "anyone can create a hold" on public.bookings;
 drop policy if exists "public can create holds" on public.bookings;
 drop policy if exists "read bookings" on public.bookings;
@@ -196,6 +200,12 @@ drop policy if exists "staff can read staff users" on public.staff_users;
 create policy "public can view active vehicles"
   on public.vehicles for select
   using (active or public.is_staff());
+
+create policy "staff manage vehicles"
+  on public.vehicles for all
+  to authenticated
+  using (public.is_staff())
+  with check (public.is_staff());
 
 create policy "public can create holds"
   on public.bookings for insert
@@ -230,12 +240,34 @@ create policy "staff can read staff users"
 -- The service role bypasses RLS. These grants allow the browser to create
 -- public holds while keeping bookings and staff data staff-only.
 grant select on public.vehicles to anon, authenticated;
+grant insert, update on public.vehicles to authenticated;
 grant insert on public.bookings to anon, authenticated;
 grant select, update on public.bookings to authenticated;
 grant insert on public.holds to anon, authenticated;
 grant select, update on public.holds to authenticated;
 grant all on public.vehicles, public.bookings, public.holds, public.staff_users
   to service_role;
+
+insert into storage.buckets (id, name, public)
+values ('vehicle-images', 'vehicle-images', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "public can view vehicle images" on storage.objects;
+drop policy if exists "staff can upload vehicle images" on storage.objects;
+drop policy if exists "staff can update vehicle images" on storage.objects;
+
+create policy "public can view vehicle images"
+  on storage.objects for select
+  using (bucket_id = 'vehicle-images');
+
+create policy "staff can upload vehicle images"
+  on storage.objects for insert to authenticated
+  with check (bucket_id = 'vehicle-images' and public.is_staff());
+
+create policy "staff can update vehicle images"
+  on storage.objects for update to authenticated
+  using (bucket_id = 'vehicle-images' and public.is_staff())
+  with check (bucket_id = 'vehicle-images' and public.is_staff());
 
 -- ---------------------------------------------------------------------------
 -- Fleet seed
@@ -247,17 +279,17 @@ insert into public.vehicles (
 )
 values
   ('lc-tx', 'Toyota Land Cruiser TX', 'safari', 7, 'Automatic', 'Diesel',
-   120000, 160000, '{"Pop-up roof","4x4","Fridge","Snorkel"}', true),
+   50000, 160000, '{"Pop-up roof","4x4","Fridge","Snorkel"}', true),
   ('lc-prado', 'Toyota Land Cruiser Prado', 'safari', 5, 'Automatic', 'Diesel',
-   100000, 140000, '{"4x4","Roof rack","A/C","Bluetooth"}', true),
+   50000, 140000, '{"4x4","Roof rack","A/C","Bluetooth"}', true),
   ('rav4', 'Toyota RAV4', 'suv', 5, 'Automatic', 'Petrol',
-   65000, 95000, '{"AWD","A/C","Reverse camera"}', true),
+   50000, 95000, '{"AWD","A/C","Reverse camera"}', true),
   ('corolla', 'Toyota Corolla', 'sedan', 5, 'Automatic', 'Petrol',
-   45000, 70000, '{"A/C","Fuel efficient","Bluetooth"}', true),
+   50000, 70000, '{"A/C","Fuel efficient","Bluetooth"}', true),
   ('camry', 'Toyota Camry Executive', 'sedan', 5, 'Automatic', 'Hybrid',
-   70000, 100000, '{"Leather seats","Hybrid","Airport-ready"}', true),
+   50000, 100000, '{"Leather seats","Hybrid","Airport-ready"}', true),
   ('hiace', 'Toyota Hiace Executive Van', 'van', 14, 'Manual', 'Diesel',
-   110000, 150000, '{"14 seats","Luggage space","Group tours"}', true)
+   50000, 150000, '{"14 seats","Luggage space","Group tours"}', true)
 on conflict (id) do update set
   name = excluded.name,
   category = excluded.category,

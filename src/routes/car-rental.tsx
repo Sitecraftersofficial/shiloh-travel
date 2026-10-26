@@ -58,25 +58,75 @@ export default function CarRental() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-14">
-      <div className="relative overflow-hidden rounded-[2rem] bg-primary px-7 py-12 text-white md:px-14 md:py-16">
+      <div className="relative overflow-hidden rounded-4xl bg-primary px-7 py-12 text-white md:px-14 md:py-16">
         <div className="absolute right-0 top-0 h-full w-1/2 bg-[radial-gradient(circle_at_center,rgba(232,190,87,.25),transparent_60%)]" />
-        <div className="relative max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">
-            Car rental · Kigali, Rwanda
-          </p>
-          <h1 className="mt-4 text-4xl font-semibold leading-[0.95] md:text-7xl">
-            Rent a car for your dates —
-            <br />
-            <span className="text-accent">self-drive or with a driver.</span>
-          </h1>
-          <p className="mt-6 max-w-xl text-white/75">
-            Every car below is ours, insured, and available for the dates you choose. Rates are per
-            day in Rwandan francs; reserve now and pay at pickup.
-          </p>
-          <p className="mt-6 flex items-center gap-2 text-white/75">
-            <MapPin className="h-4 w-4 text-accent" />
-            Pickup & return at {SITE.office}
-          </p>
+        <div className="relative grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-accent">
+              Car rental · Kigali, Rwanda
+            </p>
+            <h1 className="mt-4 text-4xl font-semibold leading-[0.95] md:text-7xl">
+              Rent a car for your dates —
+              <br />
+              <span className="text-accent">self-drive or with a driver.</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-white/75">
+              Every car below is ours, insured, and available for the dates you choose. Rates are
+              per day in Rwandan francs; reserve now and pay at pickup.
+            </p>
+            <p className="mt-6 flex items-center gap-2 text-white/75">
+              <MapPin className="h-4 w-4 text-accent" />
+              Pickup & return at {SITE.office}
+            </p>
+          </div>
+          <div className="relative">
+            <div className="rounded-2xl border border-white/15 bg-white/5 p-6 backdrop-blur-sm md:p-8">
+              <p className="text-xs font-bold uppercase tracking-[.2em] text-accent">
+                Why rent with Shiloh
+              </p>
+              <ul className="mt-5 space-y-3">
+                {[
+                  "Comprehensive insurance on every vehicle",
+                  "Pickup & return at our YYUSSA City Center office",
+                  "Experienced local chauffeurs who know the routes",
+                  "Airport transfers available",
+                ].map((point) => (
+                  <li key={point} className="flex items-start gap-3 text-sm text-white/85">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6 grid grid-cols-3 gap-3 border-t border-white/15 pt-5 text-center">
+                <div>
+                  <p className="text-2xl font-bold text-accent">4</p>
+                  <p className="mt-1 text-[11px] uppercase tracking-wider text-white/60">
+                    Vehicle types
+                  </p>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-accent">24/7</p>
+                  <p className="mt-1 text-[11px] uppercase tracking-wider text-white/60">
+                    Roadside support
+                  </p>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-accent">Easy</p>
+                  <p className="mt-1 text-[11px] uppercase tracking-wider text-white/60">
+                    Convenient booking
+                  </p>
+                </div>
+              </div>
+              <a
+                href={waLink("Hello Shiloh Travel, I'd like help choosing a rental car.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 flex items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-bold text-accent-foreground transition-transform hover:-translate-y-0.5"
+              >
+                Not sure which car? Ask us
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <p className="mt-6 hidden items-center gap-2 text-muted-foreground">
@@ -166,17 +216,17 @@ export default function CarRental() {
           return (
             <article
               key={v.id}
-              className="group flex flex-col overflow-hidden rounded-[1.5rem] border bg-white shadow-[0_18px_50px_-35px_rgba(11,54,130,.6)] transition-transform duration-300 hover:-translate-y-2"
+              className="group flex flex-col overflow-hidden rounded-3xl border bg-white shadow-[0_18px_50px_-35px_rgba(11,54,130,.6)] transition-transform duration-300 hover:-translate-y-2"
             >
               <div className="relative">
                 <Link to={`/car-rental?vehicle=${v.id}`} aria-label={`View details for ${v.name}`}>
                   <img
-                    src={vehicleImage(v.id, v.category)}
+                    src={vehicleImage(v.id, v.category, v.image_url)}
                     alt={v.name}
                     loading="lazy"
                     width={1024}
                     height={704}
-                    className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="aspect-16/10 w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </Link>
                 <span

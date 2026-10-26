@@ -14,6 +14,7 @@ create table if not exists public.vehicles (
   self_drive_rate int not null,   -- RWF per day
   chauffeur_rate int not null,    -- RWF per day
   features text[] not null default '{}',
+  image_url text,
   active boolean not null default true
 );
 
@@ -66,7 +67,8 @@ $$;
 -- select cron.schedule('release-holds', '*/5 * * * *', 'select public.release_expired_holds()');
 
 -- 4. Grants + Row Level Security --------------------------------------------
-grant select on public.vehicles to anon, authenticated;
+grant select, insert, update on public.vehicles to authenticated;
+grant select on public.vehicles to anon;
 grant select, insert, update on public.bookings to anon, authenticated;
 grant select, insert, update on public.holds to anon, authenticated;
 grant all on public.vehicles, public.bookings, public.holds to service_role;
@@ -76,6 +78,8 @@ alter table public.bookings enable row level security;
 alter table public.holds enable row level security;
 
 create policy "public read vehicles" on public.vehicles for select using (active);
+create policy "staff manage vehicles" on public.vehicles for all
+  to authenticated using (true) with check (true);
 -- NOTE: these demo policies let the browser read/update bookings so the staff
 -- dashboard works with the anon key. Before going live, add Supabase Auth for
 -- staff and restrict select/update on bookings to authenticated staff.
@@ -89,17 +93,17 @@ create policy "holds update" on public.holds for update using (true);
 
 -- 5. Seed fleet --------------------------------------------------------------
 insert into public.vehicles (id,name,category,seats,transmission,fuel,self_drive_rate,chauffeur_rate,features) values
- ('lc-tx','Toyota Land Cruiser TX','safari',7,'Automatic','Diesel',120000,160000,'{"Pop-up roof","4x4","Fridge","Snorkel"}'),
- ('lc-prado','Toyota Land Cruiser Prado','safari',5,'Automatic','Diesel',100000,140000,'{"4x4","Roof rack","A/C","Bluetooth"}'),
- ('rav4','Toyota RAV4','suv',5,'Automatic','Petrol',65000,95000,'{"AWD","A/C","Reverse camera"}'),
- ('corolla','Toyota Corolla','sedan',5,'Automatic','Petrol',45000,70000,'{"A/C","Fuel efficient","Bluetooth"}'),
- ('camry','Toyota Camry Executive','sedan',5,'Automatic','Hybrid',70000,100000,'{"Leather seats","Hybrid","Airport-ready"}'),
- ('hiace','Toyota Hiace Executive Van','van',14,'Manual','Diesel',110000,150000,'{"14 seats","Luggage space","Group tours"}'),
- ('santafe-rai262p','Hyundai Santa Fe · RAI 262P','suv',7,'Automatic','Petrol',90000,120000,'{"7 seats","AWD","A/C","Bluetooth"}'),
- ('sorento2015-raj673m','Kia Sorento 2015 · RAJ 673M','suv',7,'Automatic','Diesel',85000,115000,'{"7 seats","A/C","Bluetooth"}'),
- ('sorento2014-raj736c','Kia Sorento 2014 · RAJ 736C','suv',7,'Automatic','Diesel',80000,110000,'{"7 seats","A/C","Bluetooth"}'),
- ('sorento2013-rad626d','Kia Sorento 2013 · RAD 626D','suv',7,'Automatic','Diesel',75000,105000,'{"7 seats","A/C"}'),
- ('niro-rah846n','Kia Niro · RAH 846N','suv',5,'Automatic','Hybrid',70000,100000,'{"Hybrid","Fuel efficient","A/C","Bluetooth"}'),
- ('byd-sealion','BYD Sealion','suv',5,'Automatic','Electric',95000,130000,'{"Electric","A/C","Bluetooth"}')
+ ('lc-tx','Toyota Land Cruiser TX','safari',7,'Automatic','Diesel',50000,160000,'{"Pop-up roof","4x4","Fridge","Snorkel"}'),
+ ('lc-prado','Toyota Land Cruiser Prado','safari',5,'Automatic','Diesel',50000,140000,'{"4x4","Roof rack","A/C","Bluetooth"}'),
+ ('rav4','Toyota RAV4','suv',5,'Automatic','Petrol',50000,95000,'{"AWD","A/C","Reverse camera"}'),
+ ('corolla','Toyota Corolla','sedan',5,'Automatic','Petrol',50000,70000,'{"A/C","Fuel efficient","Bluetooth"}'),
+ ('camry','Toyota Camry Executive','sedan',5,'Automatic','Hybrid',50000,100000,'{"Leather seats","Hybrid","Airport-ready"}'),
+ ('hiace','Toyota Hiace Executive Van','van',14,'Manual','Diesel',50000,150000,'{"14 seats","Luggage space","Group tours"}'),
+ ('santafe-rai262p','Hyundai Santa Fe · RAI 262P','suv',7,'Automatic','Petrol',50000,120000,'{"7 seats","AWD","A/C","Bluetooth"}'),
+ ('sorento2015-raj673m','Kia Sorento 2015 · RAJ 673M','suv',7,'Automatic','Diesel',50000,115000,'{"7 seats","A/C","Bluetooth"}'),
+ ('sorento2014-raj736c','Kia Sorento 2014 · RAJ 736C','suv',7,'Automatic','Diesel',50000,110000,'{"7 seats","A/C","Bluetooth"}'),
+ ('sorento2013-rad626d','Kia Sorento 2013 · RAD 626D','suv',7,'Automatic','Diesel',50000,105000,'{"7 seats","A/C"}'),
+ ('niro-rah846n','Kia Niro · RAH 846N','suv',5,'Automatic','Hybrid',50000,100000,'{"Hybrid","Fuel efficient","A/C","Bluetooth"}'),
+ ('byd-sealion','BYD Sealion','suv',5,'Automatic','Electric',50000,130000,'{"Electric","A/C","Bluetooth"}')
 on conflict (id) do nothing;
 `;

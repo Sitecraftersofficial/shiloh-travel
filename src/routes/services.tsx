@@ -1,7 +1,10 @@
+import { useEffect, useState } from "react";
 import {
   ArrowDown,
   ArrowUpRight,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Compass,
   MessageCircle,
   Mountain,
@@ -11,15 +14,57 @@ import { Link } from "react-router-dom";
 import { SERVICES } from "@/lib/services";
 import { WhatsAppButton } from "@/components/SiteChrome";
 import { Reveal } from "@/components/Reveal";
+import fourByFourImage from "@/assets/car-4x4.jpg";
+import vanImage from "@/assets/car-van.jpg";
+import sedanImage from "@/assets/car-sedan.jpg";
+
+const heroSlides = [
+  { src: fourByFourImage, alt: "Safari-ready 4x4 vehicle", mobilePosition: "object-[72%_center]" },
+  {
+    src: vanImage,
+    alt: "Comfortable passenger van for group travel",
+    mobilePosition: "object-[24%_center]",
+  },
+  {
+    src: sedanImage,
+    alt: "Comfortable sedan for city travel",
+    mobilePosition: "object-[24%_center]",
+  },
+];
 
 const tour = SERVICES.find((service) => service.id === "tours")!;
 const supporting = SERVICES.filter((service) => service.id !== "tours");
 
 export default function Services() {
+  const [heroSlide, setHeroSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setHeroSlide((current) => (current + 1) % heroSlides.length);
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const changeHeroSlide = (direction: number) => {
+    setHeroSlide((current) => (current + direction + heroSlides.length) % heroSlides.length);
+  };
+
   return (
     <div className="bg-background">
       <section className="relative overflow-hidden bg-foreground text-primary-foreground">
-        <div className="absolute right-0 top-0 h-full w-1/2 bg-[radial-gradient(circle_at_center,rgba(208,160,75,.28),transparent_60%)]" />
+        {heroSlides.map((slide, index) => (
+          <img
+            key={slide.src}
+            src={slide.src}
+            alt={slide.alt}
+            aria-hidden={index !== heroSlide}
+            className={`absolute inset-0 h-full w-full object-cover ${slide.mobilePosition} transition-opacity duration-1000 lg:object-[center_45%] ${
+              index === heroSlide ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        ))}
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,25,55,.94)_0%,rgba(8,25,55,.76)_42%,rgba(8,25,55,.2)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(8,25,55,.82)_0%,transparent_55%)]" />
         <div className="relative mx-auto grid min-h-[560px] max-w-7xl items-end gap-10 px-4 py-20 md:grid-cols-[1.15fr_.85fr] md:py-28">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[.3em] text-accent">
@@ -43,6 +88,37 @@ export default function Services() {
               Kigali
             </div>
           </div>
+        </div>
+        <div className="absolute bottom-8 right-4 flex items-center gap-2 sm:right-8 lg:right-[max(2rem,calc((100vw-80rem)/2))]">
+          <button
+            type="button"
+            aria-label="Previous services hero image"
+            onClick={() => changeHeroSlide(-1)}
+            className="grid h-9 w-9 place-items-center rounded-full border border-white/30 bg-black/20 text-white backdrop-blur transition-colors hover:bg-black/40"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <div className="flex items-center gap-1.5 px-1">
+            {heroSlides.map((slide, index) => (
+              <button
+                key={slide.src}
+                type="button"
+                aria-label={`Show services hero image ${index + 1}`}
+                onClick={() => setHeroSlide(index)}
+                className={`h-1.5 rounded-full transition-all ${
+                  index === heroSlide ? "w-6 bg-accent" : "w-1.5 bg-white/60 hover:bg-white"
+                }`}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            aria-label="Next services hero image"
+            onClick={() => changeHeroSlide(1)}
+            className="grid h-9 w-9 place-items-center rounded-full border border-white/30 bg-black/20 text-white backdrop-blur transition-colors hover:bg-black/40"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
         </div>
       </section>
 
@@ -93,17 +169,17 @@ export default function Services() {
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[.25em] text-accent">
-                The travel desk
+                Travel support
               </p>
               <h2 className="mt-3 text-4xl font-semibold md:text-6xl">
-                The other services we
+                Every service,
                 <br />
-                handle for you.
+                handled one by one.
               </h2>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Tell us what you need — a flight, a visa, a hotel or an apartment — and we'll come
-              back with options and prices, usually the same day.
+              Visa assistance, hotel booking, airport transfers, flights and apartments — pick what
+              you need and message our team directly about it.
             </p>
           </div>
           <div className="mt-16 grid gap-4 md:grid-cols-2">
@@ -124,7 +200,7 @@ export default function Services() {
                     {service.blurb}
                   </p>
                   <div className="mt-5 flex flex-wrap gap-2">
-                    {service.points.slice(0, 2).map((point) => (
+                    {service.points.slice(0, 3).map((point) => (
                       <span
                         key={point}
                         className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-primary"
@@ -157,9 +233,18 @@ export default function Services() {
           >
             Explore the fleet
           </Link>
-          <WhatsAppButton message="Hello Shiloh Travel, I'd like help planning a trip.">
-            Talk to the team
-          </WhatsAppButton>
+          <Link to="/services#visa" className="rounded-full border px-6 py-3 font-semibold">
+            Visa assistance
+          </Link>
+          <Link to="/services#hotels" className="rounded-full border px-6 py-3 font-semibold">
+            Hotel booking
+          </Link>
+          <Link
+            to="/services#airport-transfer"
+            className="rounded-full border px-6 py-3 font-semibold"
+          >
+            Airport transfer
+          </Link>
         </div>
         <ArrowDown className="mt-12 h-5 w-5 animate-bounce text-muted-foreground" />
       </section>

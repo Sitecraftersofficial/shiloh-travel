@@ -15,6 +15,8 @@ export interface Vehicle {
   self_drive_rate: number;
   chauffeur_rate: number;
   features: string[];
+  image_url?: string | null;
+  active?: boolean;
 }
 
 export interface Booking {
@@ -38,8 +40,8 @@ export interface Booking {
 
 export const HOLD_MS = 3 * 60 * 60 * 1000;
 
-// TEMP: all cars flat-priced — self-drive 60,000 / chauffeur 90,000 RWF per day.
-const TEMP_SELF_DRIVE = 60000;
+// TEMP: all cars flat-priced — self-drive 50,000 / chauffeur 90,000 RWF per day.
+const TEMP_SELF_DRIVE = 50000;
 const TEMP_CHAUFFEUR = 90000;
 
 export const SEED_VEHICLES: Vehicle[] = [
@@ -53,6 +55,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     self_drive_rate: TEMP_SELF_DRIVE,
     chauffeur_rate: TEMP_CHAUFFEUR,
     features: ["7 seats", "AWD", "A/C", "Bluetooth"],
+    active: true,
   },
   {
     id: "sorento2015-raj673m",
@@ -64,6 +67,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     self_drive_rate: TEMP_SELF_DRIVE,
     chauffeur_rate: TEMP_CHAUFFEUR,
     features: ["7 seats", "A/C", "Bluetooth"],
+    active: true,
   },
   {
     id: "sorento2014-raj736c",
@@ -75,6 +79,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     self_drive_rate: TEMP_SELF_DRIVE,
     chauffeur_rate: TEMP_CHAUFFEUR,
     features: ["7 seats", "A/C", "Bluetooth"],
+    active: true,
   },
   {
     id: "sorento2013-rad626d",
@@ -86,6 +91,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     self_drive_rate: TEMP_SELF_DRIVE,
     chauffeur_rate: TEMP_CHAUFFEUR,
     features: ["7 seats", "A/C"],
+    active: true,
   },
   {
     id: "niro-rah846n",
@@ -97,6 +103,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     self_drive_rate: TEMP_SELF_DRIVE,
     chauffeur_rate: TEMP_CHAUFFEUR,
     features: ["Hybrid", "Fuel efficient", "A/C", "Bluetooth"],
+    active: true,
   },
   {
     id: "byd-sealion",
@@ -108,6 +115,7 @@ export const SEED_VEHICLES: Vehicle[] = [
     self_drive_rate: TEMP_SELF_DRIVE,
     chauffeur_rate: TEMP_CHAUFFEUR,
     features: ["Electric", "A/C", "Bluetooth"],
+    active: true,
   },
 ];
 
@@ -259,10 +267,114 @@ function demoSeed(): Booking[] {
 }
 
 // ---------- data API ----------
-// The fleet is defined locally (photos live in src/assets) — the Supabase
-// vehicles table is ignored so only these cars are shown on the site.
+const FLEET_KEY = "shiloh-demo-fleet-v1";
+const vehicleListeners = new Set<() => void>();
+const emitVehicles = () => vehicleListeners.forEach((listener) => listener());
+
 export async function fetchVehicles(): Promise<Vehicle[]> {
+  if (supabase) {
+    const { data, error } = await supabase.from("vehicles").select("*").order("name");
+    if (error) throw error;
+    return (data ?? []) as Vehicle[];
+  }
+  if (typeof window === "undefined") return SEED_VEHICLES;
+  const raw = window.localStorage.getItem(FLEET_KEY);
+  if (raw) {
+    try {
+      return JSON.parse(raw) as Vehicle[];
+    } catch {
+      window.localStorage.removeItem(FLEET_KEY);
+    }
+  }
+  window.localStorage.setItem(FLEET_KEY, JSON.stringify(SEED_VEHICLES));
   return SEED_VEHICLES;
+}
+
+export type VehicleInput = Omit<Vehicle, "id" | "active">;
+
+function vehicleSlug(name: string) {
+  const slug = name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+  return `${slug || "vehicle"}-${Date.now().toString(36)}`;
+}
+
+export async function createVehicle(input: VehicleInput) {
+  const vehicle = { ...input, id: vehicleSlug(input.name), active: true };
+  if (supabase) {
+    const { error } = await supabase.from("vehicles").insert(vehicle);
+    if (error) throw error;
+  } else {
+    const list = await fetchVehicles();
+    window.localStorage.setItem(FLEET_KEY, JSON.stringify([...list, vehicle]));
+  }
+  emitVehicles();
+}
+
+export async function updateVehicle(id: string, input: VehicleInput) {
+  if (supabase) {
+    const { error } = await supabase.from("vehicles").update(input).eq("id", id);
+    if (error) throw error;
+  } else {
+    const list = await fetchVehicles();
+    window.localStorage.setItem(
+      FLEET_KEY,
+      JSON.stringify(
+        list.map((vehicle) => (vehicle.id === id ? { ...vehicle, ...input } : vehicle)),
+      ),
+    );
+  }
+  emitVehicles();
+}
+
+export async function setVehicleActive(id: string, active: boolean) {
+  if (supabase) {
+    const { error } = await supabase.from("vehicles").update({ active }).eq("id", id);
+    if (error) throw error;
+  } else {
+    const list = await fetchVehicles();
+    window.localStorage.setItem(
+      FLEET_KEY,
+      JSON.stringify(list.map((vehicle) => (vehicle.id === id ? { ...vehicle, active } : vehicle))),
+    );
+  }
+  emitVehicles();
+}
+
+export async function uploadVehicleImage(file: File, vehicleId: string) {
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Please choose an image file.");
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    throw new Error("Image must be smaller than 10 MB.");
+  }
+  if (!supabase) {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = () => reject(new Error("Could not read the image."));
+      reader.readAsDataURL(file);
+    });
+  }
+  const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const path = `vehicles/${vehicleId}-${Date.now()}.${extension}`;
+  const uploadPromise = supabase.storage.from("vehicle-images").upload(path, file, {
+    upsert: true,
+    contentType: file.type,
+    cacheControl: "3600",
+  });
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    window.setTimeout(
+      () => reject(new Error("Image upload timed out. Check your connection and Storage setup.")),
+      30000,
+    );
+  });
+  const { error } = await Promise.race([uploadPromise, timeoutPromise]);
+  if (error) throw error;
+  const { data } = supabase.storage.from("vehicle-images").getPublicUrl(path);
+  return data.publicUrl;
 }
 
 export async function fetchBookings(): Promise<Booking[]> {
@@ -443,8 +555,13 @@ export function useVehicles() {
   const [vehicles, setVehicles] = useState<Vehicle[]>(SEED_VEHICLES);
   useEffect(() => {
     fetchVehicles().then(setVehicles);
+    const refresh = () => fetchVehicles().then(setVehicles);
+    vehicleListeners.add(refresh);
+    return () => {
+      vehicleListeners.delete(refresh);
+    };
   }, []);
-  return vehicles;
+  return vehicles.filter((vehicle) => vehicle.active !== false);
 }
 
 export function useNow(ms = 1000) {

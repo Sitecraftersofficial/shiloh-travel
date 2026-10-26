@@ -27,7 +27,7 @@ export default function VehicleDetail() {
     );
   }
 
-  const gallery = vehicleGallery(vehicle.id, vehicle.category);
+  const gallery = vehicleGallery(vehicle.id, vehicle.category, vehicle.image_url);
   const message = `Hello Shiloh Travel, I'm interested in the ${vehicle.name}. Please share availability and booking details.`;
 
   return (

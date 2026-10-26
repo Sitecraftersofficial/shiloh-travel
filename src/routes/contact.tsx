@@ -13,14 +13,14 @@ export default function Contact() {
               Contact & directions
             </p>
             <h1 className="mt-6 max-w-3xl text-5xl font-semibold leading-[.95] md:text-7xl">
-              Visit our desk in Kigali.
+              Visit our office in Kigali.
               <br />
               <em className="font-normal text-primary">Or just message us.</em>
             </h1>
           </div>
           <p className="max-w-sm border-l border-foreground/20 pl-6 text-lg leading-relaxed text-muted-foreground">
-            Car pickups, safari planning and travel bookings all happen at our office in YYUSSA
-            City Center. Walk in, call, or send us a WhatsApp message — we answer fast.
+            Car pickups, safari planning and travel bookings all happen at our office in YYUSSA City
+            Center. Walk in, call, or send us a WhatsApp message — we answer fast.
           </p>
         </div>
       </section>
@@ -34,9 +34,9 @@ export default function Contact() {
             <Info icon={MapPin} title="Office" text={SITE.address} />
             <Info
               icon={Phone}
-              title="Call"
-              text={SITE.phoneDisplay}
-              href={`tel:+${SITE.whatsapp}`}
+              title="Call or WhatsApp"
+              text={SITE.phones.map((p) => p.display).join(" · ")}
+              href={`tel:+${SITE.phones[0].wa}`}
             />
             <Info icon={Mail} title="Email" text={SITE.email} href={`mailto:${SITE.email}`} />
             <div className="flex gap-4 border-t pt-6">
@@ -52,9 +52,19 @@ export default function Contact() {
             </div>
           </div>
           <div className="mt-10 flex flex-wrap gap-3">
-            <WhatsAppButton message="Hello Shiloh Travel, I would like to visit your office at YYUSSA City Center, Ground Floor F1-22.">
-              Message the desk
-            </WhatsAppButton>
+            {SITE.phones.map((phone) => (
+              <a
+                key={phone.wa}
+                href={`https://wa.me/${phone.wa}?text=${encodeURIComponent(
+                  "Hello Shiloh Travel, I would like to visit your office at YYUSSA City Center, Ground Floor F1-22.",
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-whatsapp px-5 py-2.5 text-sm font-bold text-white hover:-translate-y-0.5"
+              >
+                WhatsApp {phone.display}
+              </a>
+            ))}
             <Link
               to="/car-rental"
               className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-semibold"

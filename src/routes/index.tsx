@@ -314,7 +314,7 @@ export default function Home() {
                 <article className="glass group h-full overflow-hidden rounded-3xl border border-white/70 shadow-[0_22px_55px_-35px_rgba(11,54,130,.55)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_30px_65px_-30px_rgba(11,54,130,.6)]">
                   <div className="relative overflow-hidden">
                     <img
-                      src={vehicleImage(v.id, v.category)}
+                      src={vehicleImage(v.id, v.category, v.image_url)}
                       alt={v.name}
                       loading="lazy"
                       className="aspect-16/10 w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -372,8 +372,8 @@ export default function Home() {
               Everything else your trip needs.
             </h2>
             <p className="mt-6 text-muted-foreground">
-              Flight tickets, visas, hotels and furnished apartments — the same team, the same
-              WhatsApp number, one invoice if you want it.
+              Flight tickets, visas, hotels and furnished apartments — the same team, one invoice if
+              you want it.
             </p>
             <WhatsAppButton
               message="Hello Shiloh Travel, I'd like help planning a trip."

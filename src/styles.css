@@ -4,6 +4,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Anchored sections land below the sticky header when linked with #hash */
+:target,
+[id] {
+  scroll-margin-top: 7rem;
+}
+
 @theme inline {
   --font-display: "Playfair Display", Georgia, serif;
   --font-sans: "Jost", system-ui, sans-serif;
@@ -68,6 +74,16 @@
   * {
     border-color: var(--color-border);
   }
+
+  .dashboard button:not(:disabled),
+  .dashboard select,
+  .dashboard label {
+    cursor: pointer;
+  }
+
+  .dashboard input {
+    cursor: text;
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -100,6 +116,30 @@
   }
   50% {
     transform: translate3d(0, -10px, 0) rotate(1deg);
+  }
+}
+
+@keyframes whatsapp-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 10px 30px -8px rgba(37, 211, 102, 0.8),
+      0 0 0 0 rgba(37, 211, 102, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 10px 30px -8px rgba(37, 211, 102, 0.8),
+      0 0 0 9px rgba(37, 211, 102, 0);
+  }
+}
+
+.whatsapp-glow {
+  animation: whatsapp-glow 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-glow {
+    animation: none;
   }
 }
 
@@ -188,12 +228,7 @@
 
 /* Gold shimmer text */
 .shimmer-text {
-  background: linear-gradient(
-    110deg,
-    var(--color-accent) 20%,
-    #fff 42%,
-    var(--color-accent) 62%
-  );
+  background: linear-gradient(110deg, var(--color-accent) 20%, #fff 42%, var(--color-accent) 62%);
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;

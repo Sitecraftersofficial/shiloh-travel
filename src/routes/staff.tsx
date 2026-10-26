@@ -4,10 +4,14 @@ import {
   Car as CarIcon,
   CheckCircle2,
   Clock3,
+  ImagePlus,
   Lock,
+  Pencil,
+  Plus,
   Phone,
   RefreshCw,
   ShieldCheck,
+  Trash2,
 } from "lucide-react";
 import {
   useBookings,
@@ -16,15 +20,22 @@ import {
   effectiveStatus,
   updateStatus,
   blockDates,
+  createVehicle,
   fmtCountdown,
   resetDemo,
   isBlocking,
   isSupabaseConfigured,
+  setVehicleActive,
+  updateVehicle,
+  uploadVehicleImage,
   type Booking,
+  type Category,
+  type Vehicle,
+  type VehicleInput,
 } from "@/lib/store";
 import { supabase } from "@/lib/supabase";
 import { rwf } from "@/lib/site";
-import { CATEGORY_LABEL } from "@/components/vehicle-images";
+import { CATEGORY_LABEL, vehicleImage } from "@/components/vehicle-images";
 import type { User } from "@supabase/supabase-js";
 
 const STATUS_STYLE: Record<string, string> = {
@@ -97,7 +108,7 @@ export default function Staff() {
     );
   }
   return (
-    <div className="min-h-screen bg-secondary/40 px-4 py-10">
+    <div className="dashboard min-h-screen bg-secondary/40 px-4 py-10">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-end justify-between gap-5">
           <div>
@@ -421,6 +432,8 @@ function Ops() {
         </div>
       </section>
 
+      <FleetManager vehicles={vehicles} onMessage={setMsg} />
+
       <BlockForm
         vehicles={vehicles}
         onBlock={(id, s, e, l) => act(() => blockDates(id, s, e, l), "Dates blocked.")}
@@ -493,6 +506,292 @@ function Ops() {
         )}
       </section>
     </div>
+  );
+}
+
+function FleetManager({
+  vehicles,
+  onMessage,
+}: {
+  vehicles: Vehicle[];
+  onMessage: (message: string | null) => void;
+}) {
+  const empty: VehicleInput = {
+    name: "",
+    category: "suv",
+    seats: 5,
+    transmission: "Automatic",
+    fuel: "Petrol",
+    self_drive_rate: 50000,
+    chauffeur_rate: 90000,
+    features: [],
+    image_url: "",
+  };
+  const [editing, setEditing] = useState<Vehicle | null>(null);
+  const [form, setForm] = useState<VehicleInput>(empty);
+  const [saving, setSaving] = useState(false);
+  const [uploadMessage, setUploadMessage] = useState<string | null>(null);
+
+  const start = (vehicle?: Vehicle) => {
+    setEditing(vehicle ?? null);
+    setUploadMessage(null);
+    setForm(
+      vehicle
+        ? { ...vehicle, image_url: vehicle.image_url ?? "", features: [...vehicle.features] }
+        : empty,
+    );
+  };
+  const setField = <K extends keyof VehicleInput>(key: K, value: VehicleInput[K]) =>
+    setForm((current) => ({ ...current, [key]: value }));
+
+  async function save(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.name.trim()) return onMessage("Vehicle name is required.");
+    setSaving(true);
+    try {
+      const input = {
+        ...form,
+        name: form.name.trim(),
+        features: form.features.filter(Boolean),
+        image_url: form.image_url?.trim() || null,
+      };
+      if (editing) await updateVehicle(editing.id, input);
+      else await createVehicle(input);
+      onMessage(editing ? "Vehicle updated." : "Vehicle added.");
+      setEditing(null);
+      setForm(empty);
+    } catch (error) {
+      onMessage(error instanceof Error ? error.message : "Could not save vehicle.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function upload(file: File) {
+    const id = editing?.id ?? `new-${Date.now()}`;
+    setUploadMessage("Uploading image…");
+    setSaving(true);
+    try {
+      const url = await uploadVehicleImage(file, id);
+      setField("image_url", url);
+      setUploadMessage("Image uploaded. Click Save vehicle to apply it.");
+    } catch (error) {
+      setUploadMessage(error instanceof Error ? error.message : "Could not upload image.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <section className="rounded-2xl border border-primary/10 bg-white p-5 shadow-[0_16px_40px_-30px_rgba(14,55,130,.7)]">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-accent-foreground">
+            Fleet management
+          </p>
+          <h2 className="mt-1 text-2xl font-semibold text-primary">Cars, prices & images</h2>
+        </div>
+        <button
+          type="button"
+          onClick={() => start()}
+          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+        >
+          <Plus className="h-4 w-4" /> Add car
+        </button>
+      </div>
+      <div className="mt-5 grid gap-4 md:grid-cols-2">
+        {vehicles.map((vehicle) => (
+          <div key={vehicle.id} className="overflow-hidden rounded-xl border">
+            <div className="flex items-center gap-3 p-3">
+              <img
+                src={vehicleImage(vehicle.id, vehicle.category, vehicle.image_url)}
+                alt=""
+                className="h-16 w-24 rounded-lg object-cover"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-semibold">{vehicle.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {CATEGORY_LABEL[vehicle.category]} · {vehicle.seats} seats
+                </p>
+                <p className="mt-1 text-xs font-semibold text-primary">
+                  {rwf(vehicle.self_drive_rate)} self-drive · {rwf(vehicle.chauffeur_rate)}{" "}
+                  chauffeur
+                </p>
+              </div>
+              <div className="flex shrink-0 gap-1">
+                <button
+                  type="button"
+                  onClick={() => start(vehicle)}
+                  className="rounded-full border p-2 text-primary"
+                  aria-label={`Edit ${vehicle.name}`}
+                  title="Edit vehicle"
+                >
+                  <Pencil className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm(`Remove ${vehicle.name} from the website?`)) {
+                      setVehicleActive(vehicle.id, false)
+                        .then(() => onMessage("Vehicle removed."))
+                        .catch((error) =>
+                          onMessage(
+                            error instanceof Error ? error.message : "Could not remove vehicle.",
+                          ),
+                        );
+                    }
+                  }}
+                  className="rounded-full border p-2 text-destructive"
+                  aria-label={`Remove ${vehicle.name}`}
+                  title="Remove vehicle"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      {(editing || form.name) && (
+        <form onSubmit={save} className="mt-6 grid gap-3 border-t pt-5 sm:grid-cols-2">
+          <Field label="Vehicle name">
+            <input
+              value={form.name}
+              onChange={(e) => setField("name", e.target.value)}
+              required
+              className="rounded-lg border px-3 py-2"
+            />
+          </Field>
+          <Field label="Vehicle category">
+            <select
+              value={form.category}
+              onChange={(e) => setField("category", e.target.value as Category)}
+              className="rounded-lg border px-3 py-2"
+            >
+              {(["safari", "suv", "sedan", "van"] as Category[]).map((category) => (
+                <option key={category}>{category}</option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Number of seats">
+            <input
+              type="number"
+              min="1"
+              value={form.seats}
+              onChange={(e) => setField("seats", Number(e.target.value))}
+              className="rounded-lg border px-3 py-2"
+            />
+          </Field>
+          <Field label="Transmission">
+            <input
+              value={form.transmission}
+              onChange={(e) => setField("transmission", e.target.value)}
+              className="rounded-lg border px-3 py-2"
+            />
+          </Field>
+          <Field label="Fuel type">
+            <input
+              value={form.fuel}
+              onChange={(e) => setField("fuel", e.target.value)}
+              className="rounded-lg border px-3 py-2"
+            />
+          </Field>
+          <Field label="Self-drive price (RWF/day)">
+            <input
+              type="number"
+              min="0"
+              value={form.self_drive_rate}
+              onChange={(e) => setField("self_drive_rate", Number(e.target.value))}
+              className="rounded-lg border px-3 py-2"
+            />
+          </Field>
+          <Field label="Chauffeur price (RWF/day)">
+            <input
+              type="number"
+              min="0"
+              value={form.chauffeur_rate}
+              onChange={(e) => setField("chauffeur_rate", Number(e.target.value))}
+              className="rounded-lg border px-3 py-2"
+            />
+          </Field>
+          <Field label="Features (comma-separated)" className="sm:col-span-2">
+            <input
+              value={form.features.join(", ")}
+              onChange={(e) =>
+                setField(
+                  "features",
+                  e.target.value
+                    .split(",")
+                    .map((feature) => feature.trim())
+                    .filter(Boolean),
+                )
+              }
+              className="rounded-lg border px-3 py-2"
+            />
+          </Field>
+          <Field label="Online image URL" className="sm:col-span-2">
+            <input
+              value={form.image_url ?? ""}
+              onChange={(e) => setField("image_url", e.target.value)}
+              className="rounded-lg border px-3 py-2"
+            />
+          </Field>
+          <label className="inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-primary">
+            <ImagePlus className="h-4 w-4" /> Upload image
+            <input
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])}
+            />
+          </label>
+          {uploadMessage && (
+            <p
+              className={`text-sm sm:col-span-2 ${
+                uploadMessage.startsWith("Image uploaded") ? "text-success" : "text-destructive"
+              }`}
+            >
+              {uploadMessage}
+            </p>
+          )}
+          <div className="flex gap-2 sm:col-span-2">
+            <button
+              disabled={saving}
+              className="rounded-full bg-primary px-5 py-2 font-semibold text-primary-foreground"
+            >
+              {saving ? "Saving…" : "Save vehicle"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEditing(null);
+                setForm(empty);
+              }}
+              className="rounded-full border px-5 py-2 font-semibold"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
+    </section>
+  );
+}
+
+function Field({
+  label,
+  className = "",
+  children,
+}: {
+  label: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className={`flex flex-col gap-1.5 text-sm font-semibold text-foreground ${className}`}>
+      {label}
+      {children}
+    </label>
   );
 }
 

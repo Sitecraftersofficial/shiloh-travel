@@ -65,8 +65,9 @@ export default function Home() {
             <div className="animate-rise-in inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[.2em] backdrop-blur">
               <Sparkles className="h-4 w-4 text-accent" /> Travel agency in Kigali, Rwanda
             </div>
-            <h1 className="animate-rise-in mt-8 max-w-2xl text-5xl font-semibold leading-[1.02] [animation-delay:120ms] md:text-6xl lg:text-7xl">
-              Flights, cars and safaris — <span className="shimmer-text">booked in one place.</span>
+            <h1 className="animate-rise-in mt-8 max-w-2xl text-4xl font-semibold leading-[1.05] [animation-delay:120ms] md:text-5xl lg:text-6xl">
+              Air ticketing, car rental and tours & safaris —{" "}
+              <span className="shimmer-text">all booked in one place.</span>
             </h1>
             <p className="animate-rise-in mt-8 max-w-xl text-lg leading-relaxed text-white/75 [animation-delay:240ms]">
               Shiloh Travel rents cars with or without a driver, organizes gorilla trekking and

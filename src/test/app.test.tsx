@@ -13,7 +13,7 @@ describe("App", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText(/Flights, cars and safaris/i)).toBeInTheDocument();
+    expect(screen.getByText(/Air ticketing, car rental and tours/i)).toBeInTheDocument();
   });
 
   it("shows the 404 page for unknown routes", () => {

@@ -35,7 +35,7 @@ export default function Contact() {
             <Info
               icon={Phone}
               title="Call or WhatsApp"
-              text={SITE.phones.map((p) => p.display).join(" · ")}
+              text={SITE.phones.map((p) => p.display).join("\n")}
               href={`tel:+${SITE.phones[0].wa}`}
             />
             <Info icon={Mail} title="Email" text={SITE.email} href={`mailto:${SITE.email}`} />
@@ -52,19 +52,6 @@ export default function Contact() {
             </div>
           </div>
           <div className="mt-10 flex flex-wrap gap-3">
-            {SITE.phones.map((phone) => (
-              <a
-                key={phone.wa}
-                href={`https://wa.me/${phone.wa}?text=${encodeURIComponent(
-                  "Hello Shiloh Travel, I would like to visit your office at YYUSSA City Center, Ground Floor F1-22.",
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-whatsapp px-5 py-2.5 text-sm font-bold text-white hover:-translate-y-0.5"
-              >
-                WhatsApp {phone.display}
-              </a>
-            ))}
             <Link
               to="/car-rental"
               className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-semibold"
@@ -124,11 +111,11 @@ function Info({
       <div>
         <p className="font-semibold">{title}</p>
         {href ? (
-          <a href={href} className="mt-1 block text-sm text-muted-foreground hover:text-foreground">
+          <a href={href} className="mt-1 block whitespace-pre-line text-sm text-muted-foreground hover:text-foreground">
             {text}
           </a>
         ) : (
-          <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+          <p className="mt-1 whitespace-pre-line text-sm text-muted-foreground">{text}</p>
         )}
       </div>
     </div>
